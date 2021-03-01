@@ -1,6 +1,8 @@
 import { Form, Input, Button, Select } from 'antd';
 import React from "react";
 import { useSelector,useDispatch } from 'react-redux'
+import { useState } from "react";
+
 
 import { fetchDistance } from "../redux/distanceAction";
 import { fetchBrand } from "../redux/brandAction";
@@ -31,6 +33,7 @@ const UserForm = props => {
 
   const distanceList = useSelector(state => state.distance);
   const brandList = useSelector(state => state.brand);
+  const [userDetails, setUserDetails] = useState({})
 
   const dispatch = useDispatch();
 
@@ -43,12 +46,31 @@ const UserForm = props => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    //console.log(values);
+    props.history.push('/')
     props.onSubmitForm(values);
     form.resetFields();
-
-
+    setUserDetails({})
   };
+
+  const buildURL = data => {
+    let url = '?'
+    for(let x in data) {
+      url = url + x+'='+data[x] + '/'
+    }
+    return url;
+  }
+ 
+  const onInputChange = (value, key) => {
+    console.log(value, key)
+    let temp = userDetails;
+    temp[key] = value;
+    setUserDetails(temp)
+    let url = buildURL(temp)
+    console.log(url)
+      props.history.push(url)
+
+  }
+
 
   let brandOption = (brandList.brand.data) ? setOptions(brandList.brand.data, 'name') : []
   let distanceOption = (distanceList.distance.data) ? setOptions(distanceList.distance.data, 'id') : []
@@ -61,14 +83,14 @@ const UserForm = props => {
                                 name="name"
                                 label="Hotel Name"
                                 rules={[{ required: true,},]}>
-                                <Input />
+                                <Input value={userDetails.name} onChange={(e)=> onInputChange(e.target.value, 'name')} />
                             </Form.Item>
 
                             <Form.Item
                                 name="location"
                                 label="Hotel Location"
                                 rules={[{ required: true,},]}>
-                                <Input />
+                                <Input value={userDetails.location}  onChange={(e)=> onInputChange(e.target.value, 'location')}  />
                             </Form.Item>
 
                             <Form.Item
@@ -77,6 +99,8 @@ const UserForm = props => {
                                 rules={[{ required: true,},]}>
                                 <Select
                                     placeholder="Please select Distance"
+                                    onChange={(value)=>onInputChange(value,'distance')}
+                                    value={userDetails.distance}  
                                     allowClear>
                                     {distanceOption}
                                 </Select>
@@ -89,6 +113,8 @@ const UserForm = props => {
                                 rules={[{ required: true,},]}>
                                 <Select
                                     placeholder="Please select Brand"
+                                    onChange={(value)=>onInputChange(value,'brand')}
+                                    value={userDetails.brand}  
                                     allowClear>
                                     {brandOption}
                                 </Select>
