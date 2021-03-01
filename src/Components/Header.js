@@ -1,7 +1,6 @@
 import React from 'react';
 import {  CodeSandboxOutlined } from "@ant-design/icons";
 
-import  "./index.css";
 
 
 

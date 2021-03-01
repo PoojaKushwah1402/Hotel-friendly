@@ -1,4 +1,5 @@
 import { FETCH_FAILURE, FETCH_SUCCESS, FETCH_REQUEST } from "./type";
+import { DISTANCE_NAME } from "./type";
 
 
 const initialState = {
@@ -12,19 +13,19 @@ export const distanceReducer = (state = initialState, action) => {
 
     switch(action.type) {
 
-        case  FETCH_FAILURE :
+        case  DISTANCE_NAME+FETCH_FAILURE :
             return {
                 ...state,
                 loading : true
             }
-        case FETCH_SUCCESS : 
+        case DISTANCE_NAME+FETCH_SUCCESS : 
             return {
                 ...state,
                 loading : false,
                 distance : action.payload,
                 error : ''
             }
-        case FETCH_REQUEST :
+        case DISTANCE_NAME+FETCH_REQUEST :
             return {
                 ...state,
                 loading : false,

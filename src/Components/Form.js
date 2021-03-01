@@ -23,67 +23,62 @@ const tailLayout = {
   },
 };
 
+const setOptions = (data, subject) => {
+  return (data.map( item => <Option value={item[subject]} key={item.id}> {item[subject]}</Option>))
+}
+
 const UserForm = props => {
 
   const distanceList = useSelector(state => state.distance);
   const brandList = useSelector(state => state.brand);
 
-  const dispatchDistance = useDispatch();
-  const dispatchBrand = useDispatch();
+  const dispatch = useDispatch();
 
 
   React.useEffect(()=>{
-    dispatchDistance(fetchDistance());
-    dispatchBrand(fetchBrand());
-
+    dispatch(fetchDistance());
+    dispatch(fetchBrand());
   },[])
 
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
+    //console.log(values);
     props.onSubmitForm(values);
     form.resetFields();
-    console.log(brandList.brand)
-    console.log(distanceList.distance )
-    // dispatch(fetchBrand);
-    // dispatch(fetchDistance);
+
+
   };
+
+  let brandOption = (brandList.brand.data) ? setOptions(brandList.brand.data, 'name') : []
+  let distanceOption = (distanceList.distance.data) ? setOptions(distanceList.distance.data, 'id') : []
+
 
     return (
             <div className='form-layout' >
-              <h1> hello{distanceList.distance + brandList.brand}</h1>
-
-
                     <Form {...layout} form={form} name="user-form" onFinish={onFinish}>
                             <Form.Item
                                 name="name"
                                 label="Hotel Name"
-                                rules={[{ required: true,},]}
-                            >
-                            <Input />
+                                rules={[{ required: true,},]}>
+                                <Input />
                             </Form.Item>
 
                             <Form.Item
                                 name="location"
                                 label="Hotel Location"
-                                rules={[{ required: true,},]}
-                            >
+                                rules={[{ required: true,},]}>
                                 <Input />
                             </Form.Item>
 
                             <Form.Item
                                 name="distance"
                                 label="Distance"
-                                rules={[{ required: true,},]}
-                            >
+                                rules={[{ required: true,},]}>
                                 <Select
-                                placeholder="Please select Distance"
-                                allowClear
-                                >
-                                <Option value="0km">0Km</Option>
-                                <Option value="10km">10Km</Option>
-                                <Option value="30">30km</Option>
+                                    placeholder="Please select Distance"
+                                    allowClear>
+                                    {distanceOption}
                                 </Select>
                             </Form.Item>
 
@@ -91,15 +86,11 @@ const UserForm = props => {
                             <Form.Item
                                 name="brand"
                                 label="Brands"
-                                rules={[{ required: true,},]}
-                            >
+                                rules={[{ required: true,},]}>
                                 <Select
-                                placeholder="Please select Brand"
-                                allowClear
-                                >
-                                <Option value="flip">Flipkart</Option>
-                                <Option value="amazon">Amazon</Option>
-                                <Option value="paytm">Paytm</Option>
+                                    placeholder="Please select Brand"
+                                    allowClear>
+                                    {brandOption}
                                 </Select>
                             </Form.Item>
 

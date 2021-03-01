@@ -1,8 +1,6 @@
 import React from 'react';
 
-import "./index.css";
-
-const Footer = props => {
+const Footer = () => {
 
     return(
         <div className='quiz-footer' >

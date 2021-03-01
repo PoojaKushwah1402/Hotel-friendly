@@ -2,25 +2,25 @@ import { FETCH_FAILURE, FETCH_SUCCESS, FETCH_REQUEST } from "./type";
 
 
 
-export const fetchrequest = () => {
+export const fetchrequest = name => {
     return{
-        type : FETCH_REQUEST
+        type : name + FETCH_REQUEST
     }
 }
 
 
-export const fetchsuccess = data => {
+export const fetchsuccess = (data, name) => {
     return{
-        type : FETCH_SUCCESS,
+        type : name + FETCH_SUCCESS,
         payload : data,
         error : ''
     }
 }
 
 
-export const fetchfailue = error => {
+export const fetchfailue = (error, name) => {
     return{
-        type : FETCH_FAILURE,
+        type : name +FETCH_FAILURE,
         payload : [],
         error : error.message
     }

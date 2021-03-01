@@ -4,7 +4,7 @@ import  "./index.css";
 
 
 
-const Heading = props => {
+const Heading = () => {
 
     return(
         <div className='heading-conatiner' >
