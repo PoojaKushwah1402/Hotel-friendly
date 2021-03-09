@@ -2,6 +2,8 @@ import { Form, Input, Button, Select } from 'antd';
 import React from "react";
 import { useSelector,useDispatch } from 'react-redux'
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+
 
 
 import { fetchDistance } from "../redux/distanceAction";
@@ -35,13 +37,17 @@ const UserForm = props => {
   const brandList = useSelector(state => state.brand);
   const [userDetails, setUserDetails] = useState({})
 
+
   const dispatch = useDispatch();
 
 
   React.useEffect(()=>{
     dispatch(fetchDistance());
     dispatch(fetchBrand());
+    setUserDetails(props.match.params)
   },[])
+
+
 
   const [form] = Form.useForm();
 
@@ -52,23 +58,26 @@ const UserForm = props => {
     setUserDetails({})
   };
 
+  const ifExists = data => (data)?data+'/' :' /'
+  
   const buildURL = data => {
-    let url = '?'
-    for(let x in data) {
-      url = url + x+'='+data[x] + '/'
-    }
+     let url =''
+     console.log(data)
+     console.log('here check')
+    url = ifExists(data.name) + ifExists(data.location)  ;
+    console.log(url)
     return url;
   }
  
   const onInputChange = (value, key) => {
-    console.log(value, key)
+    //console.log(value, key)
     let temp = userDetails;
     temp[key] = value;
     setUserDetails(temp)
-    let url = buildURL(temp)
-    console.log(url)
-      props.history.push(url)
-
+   let url = buildURL(temp)
+    //console.log('url will be',url)
+    props.history.push('/')
+    props.history.push(url)
   }
 
 
@@ -76,21 +85,27 @@ const UserForm = props => {
   let distanceOption = (distanceList.distance.data) ? setOptions(distanceList.distance.data, 'id') : []
 
 
+    let name = props.match.params.name;
+    let location = props.match.params.loaction;
+
+
     return (
             <div className='form-layout' >
                     <Form {...layout} form={form} name="user-form" onFinish={onFinish}>
                             <Form.Item
+                                initialValue={name}
                                 name="name"
                                 label="Hotel Name"
                                 rules={[{ required: true,},]}>
-                                <Input value={userDetails.name} onChange={(e)=> onInputChange(e.target.value, 'name')} />
+                                <Input  placeholder="Please  Distance" onChange={(e)=> onInputChange(e.target.value, 'name')} />
                             </Form.Item>
-
-                            <Form.Item
+ 
+                             <Form.Item
                                 name="location"
                                 label="Hotel Location"
+                                initialValue={location}
                                 rules={[{ required: true,},]}>
-                                <Input value={userDetails.location}  onChange={(e)=> onInputChange(e.target.value, 'location')}  />
+                                <Input   onChange={(e)=> onInputChange(e.target.value, 'location')}  />
                             </Form.Item>
 
                             <Form.Item
@@ -100,7 +115,6 @@ const UserForm = props => {
                                 <Select
                                     placeholder="Please select Distance"
                                     onChange={(value)=>onInputChange(value,'distance')}
-                                    value={userDetails.distance}  
                                     allowClear>
                                     {distanceOption}
                                 </Select>

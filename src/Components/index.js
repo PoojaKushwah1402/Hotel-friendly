@@ -29,10 +29,9 @@ const Hotelapp = () => {
        <Header/>
        <Heading/>
        <Switch>
-            <Route path = '/'                       
-                render={({ location, history })  => {
-                    const { query } = getParams(location);
-                    return <UserForm onSubmitForm={setDetails} query={query} history={history} />}}
+              <Route exact path = { ["/","/:name", "/:name/:loaction"]}      
+                render={(props)  => {
+                    return <UserForm onSubmitForm={setDetails} {...props} />}}
              />
        </Switch>
        <Footer/>
